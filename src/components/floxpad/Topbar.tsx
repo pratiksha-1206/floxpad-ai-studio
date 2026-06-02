@@ -1,28 +1,50 @@
-import { Search, Bell } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { AppBar, Toolbar, Box, Typography, TextField, IconButton, Avatar, InputAdornment, Badge } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Topbar() {
   return (
-    <header className="h-14 border-b border-border bg-background/70 backdrop-blur sticky top-0 z-20 flex items-center px-4 md:px-6 gap-3">
-      <div>
-        <h1 className="text-sm font-semibold leading-tight">Artifact Studio</h1>
-        <p className="text-xs text-muted-foreground leading-tight">Generate & transform SDLC artifacts with Claude</p>
-      </div>
-      <div className="ml-auto flex items-center gap-2">
-        <div className="relative hidden md:block">
-          <Search className="h-4 w-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search artifacts…" className="pl-8 w-64 h-9 bg-muted/40" />
-        </div>
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell className="h-4 w-4" />
-        </Button>
+    <AppBar
+      position="sticky"
+      color="inherit"
+      elevation={0}
+      sx={{ borderBottom: 1, borderColor: "divider", backdropFilter: "blur(8px)" }}
+    >
+      <Toolbar variant="dense" sx={{ minHeight: 56, gap: 2, px: { xs: 2, md: 4 } }}>
+        <Box>
+          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.1 }}>
+            Artifact Studio
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            Generate & transform SDLC artifacts with Claude
+          </Typography>
+        </Box>
+        <Box sx={{ flex: 1 }} />
+        <TextField
+          placeholder="Search artifacts…"
+          size="small"
+          sx={{ width: 260, display: { xs: "none", md: "block" } }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+        <IconButton aria-label="Notifications">
+          <Badge color="error" variant="dot">
+            <NotificationsNoneIcon fontSize="small" />
+          </Badge>
+        </IconButton>
         <ThemeToggle />
-        <div className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold text-brand-foreground" style={{ background: "var(--gradient-brand)" }}>
+        <Avatar sx={{ width: 32, height: 32, fontSize: 12, background: "linear-gradient(135deg,#06b6d4,#8b5cf6)" }}>
           FX
-        </div>
-      </div>
-    </header>
+        </Avatar>
+      </Toolbar>
+    </AppBar>
   );
 }

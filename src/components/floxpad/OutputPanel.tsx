@@ -1,9 +1,21 @@
-import { Copy, Check, Sparkles, Clock, Cpu, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Card,
+  CardHeader,
+  Stack,
+  Typography,
+  Button,
+  Box,
+  Chip,
+  Divider,
+  Skeleton,
+} from "@mui/material";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckIcon from "@mui/icons-material/Check";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import MemoryIcon from "@mui/icons-material/Memory";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import type { GenerationRecord } from "@/lib/floxpad-types";
 
 interface Props {
@@ -13,7 +25,6 @@ interface Props {
 
 export function OutputPanel({ record, loading }: Props) {
   const [copied, setCopied] = useState(false);
-
   const copy = async () => {
     if (!record) return;
     await navigator.clipboard.writeText(record.output);
@@ -22,70 +33,93 @@ export function OutputPanel({ record, loading }: Props) {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden flex flex-col h-full">
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-muted/30">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <h2 className="text-sm font-semibold">Generated Artifact</h2>
-        </div>
-        {record && !loading && (
-          <Button variant="ghost" size="sm" onClick={copy}>
-            {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
-            {copied ? "Copied" : "Copy"}
-          </Button>
-        )}
-      </div>
+    <Card variant="outlined" sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 400 }}>
+      <CardHeader
+        avatar={<AutoAwesomeIcon color="primary" fontSize="small" />}
+        title={<Typography variant="body2" sx={{ fontWeight: 700 }}>Generated Artifact</Typography>}
+        action={
+          record && !loading ? (
+            <Button
+              size="small"
+              startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
+              onClick={copy}
+            >
+              {copied ? "Copied" : "Copy"}
+            </Button>
+          ) : null
+        }
+        sx={{ py: 2, bgcolor: "action.hover" }}
+      />
+      <Divider />
 
       {loading ? (
-        <div className="p-6 space-y-3 flex-1">
-          <Skeleton className="h-4 w-2/3" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-4/6" />
-          <Skeleton className="h-4 w-3/4" />
-          <div className="text-xs text-center text-muted-foreground pt-4 flex items-center justify-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-primary animate-pulse" />
+        <Box sx={{ p: 4, flex: 1 }}>
+          <Stack spacing={1.5}>
+            <Skeleton variant="text" width="66%" />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" width="85%" />
+            <Skeleton variant="text" width="70%" />
+            <Skeleton variant="text" width="75%" />
+          </Stack>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: 4 }}
+          >
+            <Box component="span" className="animate-pulse" sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "primary.main" }} />
             Claude is composing the output…
-          </div>
-        </div>
+          </Typography>
+        </Box>
       ) : record ? (
         <>
-          <div className="px-5 py-3 border-b border-border flex flex-wrap items-center gap-2 text-xs">
-            <Badge variant="outline" className="gap-1">
-              <span className="text-muted-foreground">Input:</span>
-              <span className="font-medium">{record.inputType}</span>
-            </Badge>
-            <ArrowRight className="h-3 w-3 text-muted-foreground" />
-            <Badge variant="outline" className="gap-1">
-              <span className="text-muted-foreground">Output:</span>
-              <span className="font-medium">{record.outputType}</span>
-            </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <Cpu className="h-3 w-3" />
-              {record.modelName}
-            </Badge>
-            <Badge variant="secondary" className="gap-1">
-              <Clock className="h-3 w-3" />
-              {(record.durationMs / 1000).toFixed(2)}s
-            </Badge>
-          </div>
-          <ScrollArea className="flex-1">
-            <pre className="p-5 text-sm whitespace-pre-wrap font-sans leading-relaxed text-foreground/90">
-              {record.output}
-            </pre>
-          </ScrollArea>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", alignItems: "center", px: 4, py: 2, rowGap: 1 }}>
+            <Chip variant="outlined" label={`Input: ${record.inputType}`} />
+            <ArrowForwardIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+            <Chip variant="outlined" label={`Output: ${record.outputType}`} />
+            <Chip icon={<MemoryIcon />} label={record.modelName} color="primary" variant="outlined" />
+            <Chip icon={<AccessTimeIcon />} label={`${(record.durationMs / 1000).toFixed(2)}s`} />
+          </Stack>
+          <Divider />
+          <Box
+            component="pre"
+            sx={{
+              flex: 1,
+              p: 4,
+              m: 0,
+              overflow: "auto",
+              whiteSpace: "pre-wrap",
+              fontFamily: "inherit",
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "text.primary",
+            }}
+          >
+            {record.output}
+          </Box>
         </>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center p-10 text-center">
-          <div className="h-14 w-14 rounded-2xl flex items-center justify-center mb-4 shadow-elegant" style={{ background: "var(--gradient-brand)" }}>
-            <Sparkles className="h-6 w-6 text-brand-foreground" />
-          </div>
-          <h3 className="text-sm font-semibold mb-1">Output appears here</h3>
-          <p className="text-xs text-muted-foreground max-w-xs">
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", p: 6 }}>
+          <Box
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: 3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg,#06b6d4,#8b5cf6)",
+              color: "#fff",
+              mb: 2,
+            }}
+          >
+            <AutoAwesomeIcon />
+          </Box>
+          <Typography variant="body2" sx={{ fontWeight: 700 }}>Output appears here</Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 320, mt: 1 }}>
             Configure your input and output artifact types, paste your source, and click Generate to evaluate Claude.
-          </p>
-        </div>
+          </Typography>
+        </Box>
       )}
-    </div>
+    </Card>
   );
 }

@@ -1,10 +1,26 @@
-import { ArrowRight, Sparkles, Wand2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { INPUT_TYPES, OUTPUT_TYPES, MODELS, type InputType, type OutputType, type ModelId } from "@/lib/floxpad-types";
-import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Stack,
+  TextField,
+  MenuItem,
+  Button,
+  Box,
+  Typography,
+  Divider,
+} from "@mui/material";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {
+  INPUT_TYPES,
+  OUTPUT_TYPES,
+  MODELS,
+  type InputType,
+  type OutputType,
+  type ModelId,
+} from "@/lib/floxpad-types";
 
 interface Props {
   inputType: InputType;
@@ -23,80 +39,106 @@ export function ArtifactForm(p: Props) {
   const canGenerate = p.source.trim().length > 0 && !p.loading;
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-border bg-muted/30 flex items-center gap-2">
-        <Wand2 className="h-4 w-4 text-primary" />
-        <h2 className="text-sm font-semibold">Input Artifact</h2>
-      </div>
-
-      <div className="p-5 space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr] gap-4 items-end">
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Input Type</Label>
-            <Select value={p.inputType} onValueChange={(v) => p.onInputType(v as InputType)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {INPUT_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <ArrowRight className="h-4 w-4 text-muted-foreground mb-3 hidden md:block" />
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Output Type</Label>
-            <Select value={p.outputType} onValueChange={(v) => p.onOutputType(v as OutputType)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {OUTPUT_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-muted-foreground">Model</Label>
-            <Select value={p.model} onValueChange={(v) => p.onModel(v as ModelId)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {MODELS.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{m.name}</span>
-                      <span className="text-[10px] text-muted-foreground">{m.tagline}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium text-muted-foreground">Source Content</Label>
-            <span className="text-[10px] text-muted-foreground">{p.source.length} chars</span>
-          </div>
-          <Textarea
-            value={p.source}
-            onChange={(e) => p.onSource(e.target.value)}
-            placeholder={`Paste your ${p.inputType.toLowerCase()} here…`}
-            className="min-h-[280px] font-mono text-sm resize-y bg-background"
-          />
-        </div>
-
-        <div className="flex items-center justify-between pt-1">
-          <p className="text-xs text-muted-foreground">
-            Transforming <span className="font-medium text-foreground">{p.inputType}</span> →{" "}
-            <span className="font-medium text-foreground">{p.outputType}</span>
-          </p>
-          <Button
-            onClick={p.onGenerate}
-            disabled={!canGenerate}
-            className={cn("gap-2 shadow-elegant", canGenerate && "hover:opacity-95")}
-            style={{ background: "var(--gradient-brand)", color: "var(--brand-foreground)" }}
+    <Card variant="outlined">
+      <CardHeader
+        avatar={<AutoFixHighIcon color="primary" fontSize="small" />}
+        title={<Typography variant="body2" sx={{ fontWeight: 700 }}>Input Artifact</Typography>}
+        sx={{ py: 2, bgcolor: "action.hover" }}
+      />
+      <Divider />
+      <CardContent>
+        <Stack spacing={3}>
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+            sx={{ alignItems: { md: "flex-end" } }}
           >
-            <Sparkles className="h-4 w-4" />
-            {p.loading ? "Generating…" : "Generate"}
-          </Button>
-        </div>
-      </div>
-    </div>
+            <TextField
+              select
+              fullWidth
+              label="Input Type"
+              value={p.inputType}
+              onChange={(e) => p.onInputType(e.target.value as InputType)}
+            >
+              {INPUT_TYPES.map((t) => (
+                <MenuItem key={t} value={t}>{t}</MenuItem>
+              ))}
+            </TextField>
+            <ArrowForwardIcon sx={{ color: "text.secondary", display: { xs: "none", md: "block" }, mb: 1 }} />
+            <TextField
+              select
+              fullWidth
+              label="Output Type"
+              value={p.outputType}
+              onChange={(e) => p.onOutputType(e.target.value as OutputType)}
+            >
+              {OUTPUT_TYPES.map((t) => (
+                <MenuItem key={t} value={t}>{t}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              fullWidth
+              label="Model"
+              value={p.model}
+              onChange={(e) => p.onModel(e.target.value as ModelId)}
+            >
+              {MODELS.map((m) => (
+                <MenuItem key={m.id} value={m.id}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{m.name}</Typography>
+                    <Typography variant="caption" color="text.secondary">{m.tagline}</Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
+
+          <Box>
+            <Stack direction="row" sx={{ mb: 1, justifyContent: "space-between", alignItems: "center" }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                Source Content
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {p.source.length} chars
+              </Typography>
+            </Stack>
+            <TextField
+              multiline
+              minRows={10}
+              fullWidth
+              value={p.source}
+              onChange={(e) => p.onSource(e.target.value)}
+              placeholder={`Paste your ${p.inputType.toLowerCase()} here…`}
+              slotProps={{
+                input: {
+                  sx: {
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                    fontSize: 13,
+                  },
+                },
+              }}
+            />
+          </Box>
+
+          <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+            <Typography variant="caption" color="text.secondary">
+              Transforming{" "}
+              <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>{p.inputType}</Box>{" → "}
+              <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>{p.outputType}</Box>
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AutoAwesomeIcon />}
+              onClick={p.onGenerate}
+              disabled={!canGenerate}
+            >
+              {p.loading ? "Generating…" : "Generate"}
+            </Button>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

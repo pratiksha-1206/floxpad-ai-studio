@@ -1,9 +1,16 @@
-import { Clock, Trash2 } from "lucide-react";
+import {
+  Stack,
+  Box,
+  Typography,
+  IconButton,
+  Chip,
+  ButtonBase,
+  Divider,
+  Tooltip,
+} from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { GenerationRecord } from "@/lib/floxpad-types";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 
 interface Props {
   records: GenerationRecord[];
@@ -14,53 +21,76 @@ interface Props {
 
 export function HistoryPanel({ records, activeId, onSelect, onClear }: Props) {
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 text-muted-foreground" />
-          <h3 className="text-sm font-semibold">History</h3>
-          <Badge variant="secondary" className="ml-1">{records.length}</Badge>
-        </div>
+    <Stack sx={{ height: "100%" }}>
+      <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", p: 3 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
+          <AccessTimeIcon fontSize="small" color="action" />
+          <Typography variant="body2" sx={{ fontWeight: 700 }}>History</Typography>
+          <Chip size="small" label={records.length} />
+        </Stack>
         {records.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={onClear} className="text-muted-foreground hover:text-destructive">
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+          <Tooltip title="Clear history">
+            <IconButton size="small" onClick={onClear}>
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         )}
-      </div>
-      <ScrollArea className="flex-1">
+      </Stack>
+      <Divider />
+      <Box sx={{ flex: 1, overflow: "auto", p: 1.5 }}>
         {records.length === 0 ? (
-          <div className="p-6 text-center text-xs text-muted-foreground">
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", textAlign: "center", p: 4 }}>
             No generations yet. Run your first transformation to see it here.
-          </div>
+          </Typography>
         ) : (
-          <ul className="p-2 space-y-1">
-            {records.map((r) => (
-              <li key={r.id}>
-                <button
+          <Stack spacing={1}>
+            {records.map((r) => {
+              const active = activeId === r.id;
+              return (
+                <ButtonBase
+                  key={r.id}
                   onClick={() => onSelect(r)}
-                  className={cn(
-                    "w-full text-left p-3 rounded-md border transition-colors",
-                    activeId === r.id
-                      ? "border-primary/40 bg-accent/60"
-                      : "border-transparent hover:bg-muted/60"
-                  )}
+                  sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    border: 1,
+                    borderColor: active ? "primary.main" : "transparent",
+                    bgcolor: active ? "action.selected" : "transparent",
+                    "&:hover": { bgcolor: "action.hover" },
+                  }}
                 >
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <Badge variant="outline" className="text-[10px] h-4 px-1.5">{r.inputType}</Badge>
-                    <span className="text-[10px] text-muted-foreground">→</span>
-                    <Badge className="text-[10px] h-4 px-1.5">{r.outputType}</Badge>
-                  </div>
-                  <div className="text-xs line-clamp-2 text-foreground/90">{r.source.slice(0, 90) || "(empty)"}</div>
-                  <div className="flex items-center justify-between mt-2 text-[10px] text-muted-foreground">
-                    <span>{r.modelName}</span>
-                    <span>{new Date(r.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", mb: 1 }}>
+                    <Chip size="small" variant="outlined" label={r.inputType} sx={{ height: 18, fontSize: 10 }} />
+                    <Typography variant="caption" color="text.secondary">→</Typography>
+                    <Chip size="small" color="primary" label={r.outputType} sx={{ height: 18, fontSize: 10 }} />
+                  </Stack>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      color: "text.primary",
+                    }}
+                  >
+                    {r.source.slice(0, 90) || "(empty)"}
+                  </Typography>
+                  <Stack direction="row" sx={{ justifyContent: "space-between", mt: 1 }}>
+                    <Typography variant="caption" color="text.secondary">{r.modelName}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {new Date(r.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </Typography>
+                  </Stack>
+                </ButtonBase>
+              );
+            })}
+          </Stack>
         )}
-      </ScrollArea>
-    </div>
+      </Box>
+    </Stack>
   );
 }

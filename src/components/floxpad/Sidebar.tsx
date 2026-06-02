@@ -1,48 +1,115 @@
-import { Sparkles, FileText, History, Settings, LayoutDashboard, Workflow } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  Box,
+  Stack,
+  Typography,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Divider,
+} from "@mui/material";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import DescriptionIcon from "@mui/icons-material/Description";
+import HistoryIcon from "@mui/icons-material/History";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const nav = [
-  { icon: LayoutDashboard, label: "Studio", active: true },
-  { icon: Workflow, label: "Pipelines" },
-  { icon: FileText, label: "Artifacts" },
-  { icon: History, label: "History" },
-  { icon: Settings, label: "Settings" },
+  { icon: DashboardIcon, label: "Studio", active: true },
+  { icon: AccountTreeIcon, label: "Pipelines" },
+  { icon: DescriptionIcon, label: "Artifacts" },
+  { icon: HistoryIcon, label: "History" },
+  { icon: SettingsIcon, label: "Settings" },
 ];
 
 export function Sidebar() {
   return (
-    <aside className="hidden md:flex w-60 flex-col border-r border-border bg-card/40 backdrop-blur-sm">
-      <div className="px-5 py-5 flex items-center gap-2">
-        <div className="h-9 w-9 rounded-lg flex items-center justify-center text-brand-foreground shadow-elegant" style={{ background: "var(--gradient-brand)" }}>
-          <Sparkles className="h-5 w-5" />
-        </div>
-        <div>
-          <div className="text-sm font-semibold leading-tight">Floxpad</div>
-          <div className="text-xs text-muted-foreground leading-tight">AI Studio</div>
-        </div>
-      </div>
-      <nav className="flex-1 px-3 py-2 space-y-1">
-        {nav.map((item) => (
-          <button
-            key={item.label}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-              item.active
-                ? "bg-accent text-accent-foreground font-medium"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-            {item.label}
-          </button>
-        ))}
-      </nav>
-      <div className="px-4 py-4 border-t border-border">
-        <div className="rounded-lg p-3 bg-gradient-to-br from-accent/60 to-secondary/60">
-          <div className="text-xs font-medium">Claude Evaluation</div>
-          <div className="text-[11px] text-muted-foreground mt-1">SDLC artifact transformation benchmark</div>
-        </div>
-      </div>
-    </aside>
+    <Paper
+      elevation={0}
+      square
+      sx={{
+        width: 240,
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
+        borderRight: 1,
+        borderColor: "divider",
+        height: "100vh",
+        position: "sticky",
+        top: 0,
+      }}
+    >
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", px: 5, py: 5 }}>
+        <Box
+          sx={{
+            width: 36,
+            height: 36,
+            borderRadius: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg,#06b6d4,#8b5cf6)",
+            color: "#fff",
+          }}
+        >
+          <AutoAwesomeIcon fontSize="small" />
+        </Box>
+        <Box>
+          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.1 }}>Floxpad</Typography>
+          <Typography variant="caption" color="text.secondary">AI Studio</Typography>
+        </Box>
+      </Stack>
+      <Divider />
+      <List sx={{ flex: 1, px: 1.5, py: 1 }}>
+        {nav.map((item) => {
+          const Icon = item.icon;
+          return (
+            <ListItemButton
+              key={item.label}
+              selected={item.active}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                "&.Mui-selected": { bgcolor: "action.selected" },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 32, color: item.active ? "primary.main" : "text.secondary" }}>
+                <Icon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText
+                primary={item.label}
+                slotProps={{
+                  primary: {
+                    sx: {
+                      fontSize: 13.5,
+                      fontWeight: item.active ? 600 : 500,
+                      color: item.active ? "text.primary" : "text.secondary",
+                    },
+                  },
+                }}
+              />
+            </ListItemButton>
+          );
+        })}
+      </List>
+      <Divider />
+      <Box sx={{ p: 3 }}>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(6,182,212,0.12))",
+          }}
+        >
+          <Typography variant="caption" sx={{ fontWeight: 600, display: "block" }}>
+            Claude Evaluation
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            SDLC artifact transformation benchmark
+          </Typography>
+        </Paper>
+      </Box>
+    </Paper>
   );
 }
