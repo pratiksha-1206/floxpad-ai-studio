@@ -13,7 +13,7 @@ export function Topbar() {
     >
       <Toolbar variant="dense" sx={{ minHeight: 56, gap: 2, px: { xs: 2, md: 4 } }}>
         <Box>
-          <Typography variant="body2" fontWeight={700} lineHeight={1.1}>
+          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.1 }}>
             Artifact Studio
           </Typography>
           <Typography variant="caption" color="text.secondary">
@@ -25,12 +25,14 @@ export function Topbar() {
           placeholder="Search artifacts…"
           size="small"
           sx={{ width: 260, display: { xs: "none", md: "block" } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
           }}
         />
         <IconButton aria-label="Notifications">

@@ -40,7 +40,7 @@ export function Sidebar() {
         top: 0,
       }}
     >
-      <Stack direction="row" spacing={1.5} alignItems="center" sx={{ px: 5, py: 5 }}>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", px: 5, py: 5 }}>
         <Box
           sx={{
             width: 36,
@@ -56,7 +56,7 @@ export function Sidebar() {
           <AutoAwesomeIcon fontSize="small" />
         </Box>
         <Box>
-          <Typography variant="body2" fontWeight={700} lineHeight={1.1}>Floxpad</Typography>
+          <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1.1 }}>Floxpad</Typography>
           <Typography variant="caption" color="text.secondary">AI Studio</Typography>
         </Box>
       </Stack>
@@ -79,10 +79,14 @@ export function Sidebar() {
               </ListItemIcon>
               <ListItemText
                 primary={item.label}
-                primaryTypographyProps={{
-                  fontSize: 13.5,
-                  fontWeight: item.active ? 600 : 500,
-                  color: item.active ? "text.primary" : "text.secondary",
+                slotProps={{
+                  primary: {
+                    sx: {
+                      fontSize: 13.5,
+                      fontWeight: item.active ? 600 : 500,
+                      color: item.active ? "text.primary" : "text.secondary",
+                    },
+                  },
                 }}
               />
             </ListItemButton>
@@ -98,7 +102,7 @@ export function Sidebar() {
             background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(6,182,212,0.12))",
           }}
         >
-          <Typography variant="caption" fontWeight={600} display="block">
+          <Typography variant="caption" sx={{ fontWeight: 600, display: "block" }}>
             Claude Evaluation
           </Typography>
           <Typography variant="caption" color="text.secondary">

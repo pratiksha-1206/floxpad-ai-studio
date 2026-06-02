@@ -36,7 +36,7 @@ export function OutputPanel({ record, loading }: Props) {
     <Card variant="outlined" sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 400 }}>
       <CardHeader
         avatar={<AutoAwesomeIcon color="primary" fontSize="small" />}
-        title={<Typography variant="body2" fontWeight={700}>Generated Artifact</Typography>}
+        title={<Typography variant="body2" sx={{ fontWeight: 700 }}>Generated Artifact</Typography>}
         action={
           record && !loading ? (
             <Button
@@ -61,14 +61,18 @@ export function OutputPanel({ record, loading }: Props) {
             <Skeleton variant="text" width="70%" />
             <Skeleton variant="text" width="75%" />
           </Stack>
-          <Typography variant="caption" color="text.secondary" sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: 4 }}>
-            <Box component="span" sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "primary.main" }} className="animate-pulse" />
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: 4 }}
+          >
+            <Box component="span" className="animate-pulse" sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "primary.main" }} />
             Claude is composing the output…
           </Typography>
         </Box>
       ) : record ? (
         <>
-          <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center" sx={{ px: 4, py: 2 }}>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", alignItems: "center", px: 4, py: 2, rowGap: 1 }}>
             <Chip variant="outlined" label={`Input: ${record.inputType}`} />
             <ArrowForwardIcon sx={{ fontSize: 14, color: "text.secondary" }} />
             <Chip variant="outlined" label={`Output: ${record.outputType}`} />
@@ -110,7 +114,7 @@ export function OutputPanel({ record, loading }: Props) {
           >
             <AutoAwesomeIcon />
           </Box>
-          <Typography variant="body2" fontWeight={700}>Output appears here</Typography>
+          <Typography variant="body2" sx={{ fontWeight: 700 }}>Output appears here</Typography>
           <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 320, mt: 1 }}>
             Configure your input and output artifact types, paste your source, and click Generate to evaluate Claude.
           </Typography>

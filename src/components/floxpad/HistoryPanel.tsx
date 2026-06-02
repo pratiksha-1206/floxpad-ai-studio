@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { GenerationRecord } from "@/lib/floxpad-types";
 
 interface Props {
@@ -22,16 +22,16 @@ interface Props {
 export function HistoryPanel({ records, activeId, onSelect, onClear }: Props) {
   return (
     <Stack sx={{ height: "100%" }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 3 }}>
-        <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", p: 3 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
           <AccessTimeIcon fontSize="small" color="action" />
-          <Typography variant="body2" fontWeight={700}>History</Typography>
+          <Typography variant="body2" sx={{ fontWeight: 700 }}>History</Typography>
           <Chip size="small" label={records.length} />
         </Stack>
         {records.length > 0 && (
           <Tooltip title="Clear history">
             <IconButton size="small" onClick={onClear}>
-              <DeleteOutlineIcon fontSize="small" />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         )}
@@ -62,7 +62,7 @@ export function HistoryPanel({ records, activeId, onSelect, onClear }: Props) {
                     "&:hover": { bgcolor: "action.hover" },
                   }}
                 >
-                  <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1 }}>
+                  <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", mb: 1 }}>
                     <Chip size="small" variant="outlined" label={r.inputType} sx={{ height: 18, fontSize: 10 }} />
                     <Typography variant="caption" color="text.secondary">→</Typography>
                     <Chip size="small" color="primary" label={r.outputType} sx={{ height: 18, fontSize: 10 }} />
@@ -79,7 +79,7 @@ export function HistoryPanel({ records, activeId, onSelect, onClear }: Props) {
                   >
                     {r.source.slice(0, 90) || "(empty)"}
                   </Typography>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mt: 1 }}>
+                  <Stack direction="row" sx={{ justifyContent: "space-between", mt: 1 }}>
                     <Typography variant="caption" color="text.secondary">{r.modelName}</Typography>
                     <Typography variant="caption" color="text.secondary">
                       {new Date(r.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

@@ -42,7 +42,7 @@ export function ArtifactForm(p: Props) {
     <Card variant="outlined">
       <CardHeader
         avatar={<AutoFixHighIcon color="primary" fontSize="small" />}
-        title={<Typography variant="body2" fontWeight={700}>Input Artifact</Typography>}
+        title={<Typography variant="body2" sx={{ fontWeight: 700 }}>Input Artifact</Typography>}
         sx={{ py: 2, bgcolor: "action.hover" }}
       />
       <Divider />
@@ -51,7 +51,7 @@ export function ArtifactForm(p: Props) {
           <Stack
             direction={{ xs: "column", md: "row" }}
             spacing={2}
-            alignItems={{ md: "flex-end" }}
+            sx={{ alignItems: { md: "flex-end" } }}
           >
             <TextField
               select
@@ -86,7 +86,7 @@ export function ArtifactForm(p: Props) {
               {MODELS.map((m) => (
                 <MenuItem key={m.id} value={m.id}>
                   <Box>
-                    <Typography variant="body2" fontWeight={600}>{m.name}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{m.name}</Typography>
                     <Typography variant="caption" color="text.secondary">{m.tagline}</Typography>
                   </Box>
                 </MenuItem>
@@ -95,8 +95,8 @@ export function ArtifactForm(p: Props) {
           </Stack>
 
           <Box>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight={500}>
+            <Stack direction="row" sx={{ mb: 1, justifyContent: "space-between", alignItems: "center" }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
                 Source Content
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -110,11 +110,18 @@ export function ArtifactForm(p: Props) {
               value={p.source}
               onChange={(e) => p.onSource(e.target.value)}
               placeholder={`Paste your ${p.inputType.toLowerCase()} here…`}
-              InputProps={{ sx: { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 13 } }}
+              slotProps={{
+                input: {
+                  sx: {
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                    fontSize: 13,
+                  },
+                },
+              }}
             />
           </Box>
 
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
             <Typography variant="caption" color="text.secondary">
               Transforming{" "}
               <Box component="span" sx={{ fontWeight: 600, color: "text.primary" }}>{p.inputType}</Box>{" → "}
