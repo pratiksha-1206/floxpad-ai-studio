@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { Box, Stack, Tabs, Tab, Paper } from "@mui/material";
 import { Sidebar } from "@/components/floxpad/Sidebar";
 import { Topbar } from "@/components/floxpad/Topbar";
 import { ArtifactForm } from "@/components/floxpad/ArtifactForm";
 import { OutputPanel } from "@/components/floxpad/OutputPanel";
 import { HistoryPanel } from "@/components/floxpad/HistoryPanel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MODELS, type GenerationRecord, type InputType, type ModelId, type OutputType } from "@/lib/floxpad-types";
 import { generateArtifact } from "@/lib/floxpad-generate";
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ function Index() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<GenerationRecord[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [tab, setTab] = useState(0);
 
   useEffect(() => {
     try {
@@ -94,19 +95,27 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground">
+    <Box sx={{ minHeight: "100vh", display: "flex", bgcolor: "background.default", color: "text.primary" }}>
       <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <Topbar />
-        <main className="flex-1 p-4 md:p-6">
-          <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6 max-w-[1600px] mx-auto">
-            <div className="space-y-6 min-w-0">
-              <Tabs defaultValue="studio" className="w-full">
-                <TabsList>
-                  <TabsTrigger value="studio">Studio</TabsTrigger>
-                  <TabsTrigger value="output">Output</TabsTrigger>
-                </TabsList>
-                <TabsContent value="studio" className="mt-4 space-y-6">
+        <Box component="main" sx={{ flex: 1, p: { xs: 4, md: 6 } }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 6,
+              maxWidth: 1600,
+              mx: "auto",
+              gridTemplateColumns: { xs: "1fr", xl: "1fr 320px" },
+            }}
+          >
+            <Stack spacing={4} sx={{ minWidth: 0 }}>
+              <Tabs value={tab} onChange={(_, v) => setTab(v)}>
+                <Tab label="Studio" />
+                <Tab label="Output" />
+              </Tabs>
+              {tab === 0 && (
+                <Stack spacing={4}>
                   <ArtifactForm
                     inputType={inputType}
                     outputType={outputType}
@@ -119,29 +128,38 @@ function Index() {
                     onSource={setSource}
                     onGenerate={onGenerate}
                   />
-                  <div className="min-h-[400px]">
+                  <Box sx={{ minHeight: 400 }}>
                     <OutputPanel record={activeRecord} loading={loading} />
-                  </div>
-                </TabsContent>
-                <TabsContent value="output" className="mt-4">
-                  <div className="min-h-[600px]">
-                    <OutputPanel record={activeRecord} loading={loading} />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-            <aside className="rounded-xl border border-border bg-card shadow-card overflow-hidden xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
+                  </Box>
+                </Stack>
+              )}
+              {tab === 1 && (
+                <Box sx={{ minHeight: 600 }}>
+                  <OutputPanel record={activeRecord} loading={loading} />
+                </Box>
+              )}
+            </Stack>
+            <Paper
+              variant="outlined"
+              sx={{
+                overflow: "hidden",
+                display: { xs: "none", xl: "block" },
+                position: "sticky",
+                top: 80,
+                height: "calc(100vh - 7rem)",
+              }}
+            >
               <HistoryPanel
                 records={history}
                 activeId={activeId}
                 onSelect={onSelectHistory}
                 onClear={() => { setHistory([]); setActiveId(null); }}
               />
-            </aside>
-          </div>
-        </main>
-      </div>
+            </Paper>
+          </Box>
+        </Box>
+      </Box>
       <Toaster />
-    </div>
+    </Box>
   );
 }
