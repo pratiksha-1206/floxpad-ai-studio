@@ -13,6 +13,7 @@ import {
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import LayersIcon from "@mui/icons-material/Layers";
 import {
   INPUT_TYPES,
   OUTPUT_TYPES,
@@ -33,6 +34,7 @@ interface Props {
   onModel: (v: ModelId) => void;
   onSource: (v: string) => void;
   onGenerate: () => void;
+  onGenerateAll: () => void;
 }
 
 export function ArtifactForm(p: Props) {
@@ -135,6 +137,16 @@ export function ArtifactForm(p: Props) {
               disabled={!canGenerate}
             >
               {p.loading ? "Generating…" : "Generate"}
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<LayersIcon />}
+              onClick={p.onGenerateAll}
+              disabled={!canGenerate}
+              sx={{ ml: 1 }}
+            >
+              Generate All 3
             </Button>
           </Stack>
         </Stack>
