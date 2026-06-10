@@ -86,6 +86,43 @@ function Index() {
     }
   };
 
+  const onGenerateAll = async () => {
+    if (!source.trim()) {
+      toast.error("Add some source content first");
+      return;
+    }
+    setLoading(true);
+    const modelName = MODELS.find((m) => m.id === model)?.name ?? model;
+    const targets: OutputType[] = ["User Story", "Use Case", "Test Case"];
+    try {
+      const records: GenerationRecord[] = [];
+      for (const ot of targets) {
+        const started = performance.now();
+        const output = await generateArtifact({ source, inputType, outputType: ot, model });
+        const durationMs = Math.round(performance.now() - started);
+        records.push({
+          id: crypto.randomUUID(),
+          inputType,
+          outputType: ot,
+          model,
+          modelName,
+          source,
+          output,
+          durationMs,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      setHistory((h) => [...records.slice().reverse(), ...h]);
+      setActiveId(records[0].id);
+      toast.success(`Generated all 3 artifacts`);
+    } catch (e) {
+      toast.error("Generation failed");
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSelectHistory = (r: GenerationRecord) => {
     setActiveId(r.id);
     setInputType(r.inputType);
@@ -127,6 +164,7 @@ function Index() {
                     onModel={setModel}
                     onSource={setSource}
                     onGenerate={onGenerate}
+                    onGenerateAll={onGenerateAll}
                   />
                   <Box sx={{ minHeight: 400 }}>
                     <OutputPanel record={activeRecord} loading={loading} />
